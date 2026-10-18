@@ -1,0 +1,11 @@
+dist
+coverage
+playwright-report
+test-results
+pnpm-lock.yaml
+# Generated: compared byte-for-byte by `pnpm check:api` / rewritten by `pnpm gen:*`.
+src/lib/api/schema.gen.ts
+src/components/icons/svg.ts
+src/styles/fonts/fonts.css
+src/styles/themes/palettes.gen.css
+src/lib/palettes.gen.ts

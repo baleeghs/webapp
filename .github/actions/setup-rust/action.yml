@@ -1,0 +1,11 @@
+name: Set up Rust
+description: Stable toolchain with rustfmt and clippy, plus a dependency/build cache for server/.
+runs:
+  using: composite
+  steps:
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+    - uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: server

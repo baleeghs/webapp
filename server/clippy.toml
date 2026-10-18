@@ -1,0 +1,7 @@
+# Tests may unwrap/expect: a panic there is a clear test failure.
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-dbg-in-tests = true
+allow-print-in-tests = true
+# Product names that are not code; ".." keeps clippy's default list.
+doc-valid-idents = ["OpenAPI", "PostgreSQL", "gRPC", ".."]

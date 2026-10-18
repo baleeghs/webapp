@@ -1,0 +1,132 @@
+/* Element defaults on top of Tailwind preflight. */
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    /* 100 %, not px: the user's browser font size and zoom scale every rem. */
+    font-size: 100%;
+    /* app- Inter features (cv02/03/04/11: open digits, single-storey a), plus cv05 so Il1 stay
+       distinct in hostnames, alert names and ids. */
+    font-feature-settings:
+      'cv02' 1,
+      'cv03' 1,
+      'cv04' 1,
+      'cv05' 1,
+      'cv11' 1,
+      'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    overflow: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-selection);
+  }
+
+  /* One focus language (app-), keyboard only: a 2 px ring, offset 2 px, softly rounded. */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Display headings use Space Grotesk (app- `text-display-*`). */
+  h1,
+  .font-display {
+    font-family: var(--font-display);
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::placeholder {
+    color: var(--color-fg-subtle);
+    opacity: 1;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+    letter-spacing: normal;
+  }
+
+  /* Numbers in tables and KPIs line up. */
+  table,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  dialog {
+    color: inherit;
+  }
+  dialog::backdrop {
+    background-color: var(--color-overlay);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    /* Spinners carry state, so they keep turning. */
+    .animate-spin {
+      animation-duration: 0.8s !important;
+      animation-iteration-count: infinite !important;
+    }
+  }
+
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline-color: Highlight;
+    }
+    button,
+    [role='button'],
+    [role='listbox'],
+    [role='dialog'],
+    dialog,
+    .shadow-card,
+    .shadow-popover,
+    .shadow-overlay {
+      outline: 1px solid transparent;
+    }
+    [role='option'][data-active],
+    [role='tab'][aria-selected='true'],
+    [aria-current='page'] {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      color: HighlightText;
+    }
+  }
+}
+
+/* A palette, theme or density switch is instant: no transition for that frame. */
+[data-appearance-switching],
+[data-appearance-switching] *,
+[data-appearance-switching] *::before,
+[data-appearance-switching] *::after {
+  transition: none !important;
+}

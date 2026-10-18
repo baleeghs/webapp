@@ -1,0 +1,8 @@
+# Who reviews what. Later rules win. Replace the placeholders with your GitHub teams or users,
+# e.g. `* @your-org/platform`. Docs: https://docs.github.com/articles/about-code-owners
+#
+# *                 @your-org/maintainers
+# /server/          @your-org/backend
+# /web/             @your-org/frontend
+# /server/migrations/ @your-org/backend @your-org/dba
+# /.github/         @your-org/maintainers

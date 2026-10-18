@@ -1,0 +1,11 @@
+.git
+.github
+.env
+**/node_modules
+server/target
+web/dist
+server/static
+web/coverage
+web/playwright-report
+web/test-results
+docs

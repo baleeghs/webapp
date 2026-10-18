@@ -1,0 +1,54 @@
+/*
+ * Print / PDF (docs/ai/DESIGN.md "Export"): a page prints as a document. The app chrome (sidebar,
+ * top bar, toolbars, buttons) is hidden; the content flows on paper; tables and charts are kept
+ * whole on one page where possible; colours print as shown. `src/styles/print.test.ts` and `e2e/print.spec.ts` check these rules.
+ */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+  html,
+  body,
+  #root {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+  /* App chrome. */
+  aside[aria-label='Sidebar'],
+  header[data-topbar],
+  [data-print-hide],
+  [role='toolbar'],
+  .print-hidden,
+  nav[aria-label='Breadcrumb'],
+  [data-testid='page-actions'],
+  section[aria-label='Notifications'] {
+    display: none !important;
+  }
+  main#main {
+    overflow: visible !important;
+  }
+  /* Content: full width, no shadows, colours as on screen. */
+  .app-chrome {
+    max-inline-size: none !important;
+    box-shadow: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  table,
+  figure,
+  svg,
+  canvas,
+  [data-print-keep] {
+    break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  a[href]::after {
+    content: none !important;
+  }
+}

@@ -1,0 +1,32 @@
+# Environment (copy .env.example to .env)
+.env
+.env.*
+!.env.example
+
+# Rust
+server/target/
+
+# Web
+web/node_modules/
+web/dist/
+# The web build, served by the Rust server at / (pnpm build / make build-web).
+server/static/
+web/coverage/
+web/playwright-report/
+web/test-results/
+web/*.tsbuildinfo
+web/node_modules/.tmp/
+
+# Editors and OS
+.DS_Store
+.idea/
+*.swp
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Logs
+*.log
+
+server/target
+target

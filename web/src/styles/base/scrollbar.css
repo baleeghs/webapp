@@ -1,0 +1,45 @@
+/*
+ * Scrollbars (app- `scrollbar-visible` / `scrollbar-wide`). app- hides them globally; we keep
+ * the thin themed bar everywhere instead (keyboard and pointer users must see that a
+ * region scrolls), and give wide data tables the thicker horizontal bar.
+ */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-hover) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-hover);
+    border-radius: 9999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in srgb, var(--color-fg-subtle) 50%, transparent);
+  }
+}
+
+@layer utilities {
+  .scrollbar-wide {
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-border-hover) var(--color-muted);
+  }
+  .scrollbar-wide::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .scrollbar-wide::-webkit-scrollbar-track {
+    background: var(--color-muted);
+    border-radius: 9999px;
+  }
+  .scrollbar-wide::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-hover);
+    border-radius: 9999px;
+    border: 2px solid var(--color-muted);
+  }
+}

@@ -1,0 +1,25 @@
+[package]
+name = "app-server"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+actix-web = "4.17.0"
+anyhow = "1.0.104"
+app-cache = { version = "0.1.0", path = "../app-cache" }
+app-common = { version = "0.1.0", path = "../app-common" }
+app-core = { version = "0.1.0", path = "../app-core", features = ["memory"] }
+app-db = { version = "0.1.0", path = "../app-db" }
+app-grpc = { version = "0.1.0", path = "../app-grpc" }
+app-http = { version = "0.1.0", path = "../app-http" }
+app-proto = { version = "0.1.0", path = "../app-proto" }
+clap = { version = "4.6.7", features = ["derive", "env"] }
+dotenvy = "0.15.7"
+figment = "0.10.19"
+metrics-exporter-prometheus = "0.18.3"
+tokio = { version = "1.53.3", features = ["full"] }
+tracing = "0.1.44"

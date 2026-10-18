@@ -1,32 +1,18 @@
-# React + TypeScript + Vite
+# web
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The React app. Conventions: [docs/ai/FRONTEND.md](../docs/ai/FRONTEND.md) and
+[docs/ai/DESIGN.md](../docs/ai/DESIGN.md).
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+pnpm dev            # http://localhost:5173, proxies /api to the server on :8080
+pnpm test           # unit (*.test.ts) and DOM (*.dom.test.tsx) tests
+pnpm e2e            # Playwright (API mocked; no server needed)
+pnpm typecheck && pnpm lint && pnpm format:check
+pnpm build          # writes ../server/static, which the Rust server serves at / (make start)
+pnpm gen:api        # API types from ../server/openapi.yaml (or `make gen-api` from the root)
+pnpm gen:icons      # after adding an icon to gen/icons.mts
+pnpm gen:fonts      # after changing fonts in gen/fonts.mts
+pnpm gen:palettes   # after adding a palette to gen/palettes.mts
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Add dependencies with `pnpm add <pkg>` / `pnpm add -D <pkg>`; never edit versions by hand.

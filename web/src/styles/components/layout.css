@@ -1,0 +1,86 @@
+/*
+ * Layout classes: navigation items, sidebar
+ * sections, the enterprise page header. Used by components/layout.
+ */
+@layer components {
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--app-density-nav-icon-gap);
+    min-height: var(--app-density-nav-item-h);
+    padding: 0 var(--app-density-nav-item-px);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-compact-sm);
+    line-height: 1.3;
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+  .nav-item:hover {
+    background-color: color-mix(in srgb, var(--color-muted) 60%, transparent);
+    color: var(--color-fg);
+  }
+  .nav-item[aria-current='page'] {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent-text);
+    font-weight: 600;
+  }
+  .nav-item:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ring) 45%, transparent);
+  }
+
+  .sidebar-section-label {
+    padding: calc(var(--spacing) * 1) var(--app-density-nav-item-px);
+    font-size: var(--text-compact-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  /* Frosted bars that content scrolls under (top bar, sticky filter bar). */
+  .bar-frosted {
+    background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /*
+   * Screen sizes. Page chrome (headers, filter bars, analytical bodies, page bodies) is
+   * capped to one content grid on ultrawide screens, so its edges line up; the bar backgrounds
+   * still span the window. Reading widths are capped wherever prose or forms are shown.
+   */
+  .app-chrome {
+    inline-size: 100%;
+    max-inline-size: var(--app-content-max);
+    margin-inline: auto;
+  }
+  .app-chrome-bar {
+    padding-inline: max(
+      var(--app-density-page-px),
+      calc((100% - var(--app-content-max)) / 2 + var(--app-density-page-px))
+    );
+  }
+  /*
+   * Vertical rhythm (docs/ai/DESIGN.md "Spacing"): sections of one page are --app-section-gap
+   * apart (32 / 24 px by density), blocks inside a section 12 px (gap-3). PageBody and PageSection
+   * apply it; a page that stacks sections itself uses .app-sections.
+   */
+  .app-sections {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--app-section-gap);
+  }
+  .app-reading {
+    max-inline-size: 75ch;
+  }
+  .app-reading-chat {
+    max-inline-size: 90ch;
+  }
+  .app-form {
+    max-inline-size: 45rem;
+  }
+}

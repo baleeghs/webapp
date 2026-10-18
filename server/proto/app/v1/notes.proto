@@ -1,0 +1,56 @@
+// Example gRPC API, mirroring the HTTP API in openapi.yaml. Conventions (docs/api/API.md):
+// one file per service, package `app.v<N>`, never renumber or reuse field numbers.
+syntax = "proto3";
+
+package app.v1;
+
+import "google/protobuf/timestamp.proto";
+
+service NoteService {
+  rpc ListNotes(ListNotesRequest) returns (ListNotesResponse);
+  rpc GetNote(GetNoteRequest) returns (Note);
+  rpc CreateNote(CreateNoteRequest) returns (Note);
+  rpc UpdateNote(UpdateNoteRequest) returns (Note);
+  rpc DeleteNote(DeleteNoteRequest) returns (DeleteNoteResponse);
+}
+
+message Note {
+  string id = 1;
+  string title = 2;
+  string body = 3;
+  google.protobuf.Timestamp create_time = 4;
+  google.protobuf.Timestamp update_time = 5;
+}
+
+message ListNotesRequest {
+  // 1..=100; 0 means the server default.
+  uint32 page_size = 1;
+  uint64 offset = 2;
+}
+
+message ListNotesResponse {
+  repeated Note notes = 1;
+  uint64 total = 2;
+}
+
+message GetNoteRequest {
+  string id = 1;
+}
+
+message CreateNoteRequest {
+  string title = 1;
+  string body = 2;
+}
+
+// Unset fields are left unchanged.
+message UpdateNoteRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string body = 3;
+}
+
+message DeleteNoteRequest {
+  string id = 1;
+}
+
+message DeleteNoteResponse {}

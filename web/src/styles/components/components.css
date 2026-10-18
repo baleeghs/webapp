@@ -1,0 +1,247 @@
+/*
+ * Component classes: cards, glass, display type,
+ * skeleton, spinner, status dots, focus ring. Colours come from our --app-* tokens, so they follow
+ * the palette and mode. In-house components (components/ui) apply these classes.
+ */
+
+@layer components {
+  /* ─── Display type scale (Space Grotesk) ─── */
+  .text-display-md {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .text-display-sm {
+    font-family: var(--font-display);
+    font-size: 1.875rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .text-display-xs {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* ─── Cards (app .card): crisp 2 px corners, hairline, small shadow ─── */
+  .card {
+    background-color: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xs);
+    box-shadow: var(--shadow-sm);
+  }
+  .card-hover {
+    transition:
+      box-shadow var(--duration-slow) var(--ease-standard),
+      transform var(--duration-slow) var(--ease-standard),
+      border-color var(--duration-slow) var(--ease-standard);
+  }
+  .card-hover:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: var(--color-border-hover);
+  }
+  .card-elevated {
+    background-color: var(--color-surface-elevated);
+    border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+    border-radius: var(--radius-xs);
+    box-shadow: var(--shadow-md);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    min-height: var(--app-density-card-header-h);
+    padding: calc(var(--spacing) * 2) var(--app-density-card-p);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .card-body {
+    padding: var(--app-density-card-p);
+  }
+  .card-footer {
+    padding: calc(var(--spacing) * 2) var(--app-density-card-p);
+    border-top: 1px solid var(--color-border);
+    background-color: color-mix(in srgb, var(--color-muted) 35%, transparent);
+  }
+
+  /* ─── Glass (app .glass): floating chrome over content ─── */
+  .glass {
+    background: var(--color-glass);
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  }
+
+  /* ─── Section label (app stat/section headers) ─── */
+  .section-label {
+    font-size: var(--text-compact-2xs);
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  /* ─── Skeleton (app react-loading-skeleton look, in-house): translucent muted ink that
+     adapts to any surface, a 1.6 s shimmer, invisible for the first 150 ms so fast loads never
+     flash. ─── */
+  .app-skeleton {
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-fg-subtle) 12%, transparent) 25%,
+      color-mix(in srgb, var(--color-fg-subtle) 26%, transparent) 50%,
+      color-mix(in srgb, var(--color-fg-subtle) 12%, transparent) 75%
+    );
+    background-size: 200% 100%;
+    animation:
+      var(--animate-shimmer),
+      fade-in var(--duration-base) var(--ease-standard) 150ms both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-skeleton {
+      animation: none;
+      background: color-mix(in srgb, var(--color-fg-subtle) 14%, transparent);
+    }
+  }
+
+  /* ─── Status dot (app), with an optional pulse for live state ─── */
+  .status-dot {
+    display: inline-block;
+    width: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 2);
+    border-radius: 9999px;
+    flex-shrink: 0;
+    background-color: currentColor;
+  }
+  .status-dot-pulse {
+    animation: app-pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+  /* The remaining time of an action toast (Undo): a bar that shrinks to the left. */
+  .app-toast-timer {
+    animation: app-toast-timer linear forwards;
+  }
+  @keyframes app-toast-timer {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-toast-timer {
+      display: none;
+    }
+  }
+  @keyframes app-pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 currentColor;
+      opacity: 0.8;
+    }
+    70% {
+      box-shadow: 0 0 0 5px transparent;
+      opacity: 1;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  /* Truncate a single line with an ellipsis inside flex rows. */
+  .app-truncate {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Enlarges a small control's hit area to 24 px or more (WCAG 2.5.8) without changing its look. */
+  .app-hit {
+    position: relative;
+  }
+  .app-hit::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+@layer utilities {
+  /* app focus ring for controls that draw their own focus (buttons, fields). */
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-bg),
+      0 0 0 4px color-mix(in srgb, var(--color-ring) 55%, transparent);
+  }
+  /* app interactive lift. */
+  .interactive {
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  .interactive:hover {
+    transform: translateY(-1px);
+  }
+  .interactive:active {
+    transform: none;
+  }
+}
+
+/*
+ * State-strip textures for the "no data" states (WCAG 1.4.1): drawn over the solid
+ * fill in the canvas colour, so they read in every palette and mode and survive greyscale.
+ */
+@layer components {
+  .app-tex-hatch {
+    background-image: repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--color-bg) 55%, transparent) 0 2px,
+      transparent 2px 6px
+    );
+  }
+  .app-tex-zigzag {
+    background-image:
+      linear-gradient(135deg, color-mix(in srgb, var(--color-bg) 50%, transparent) 25%, transparent 25%),
+      linear-gradient(225deg, color-mix(in srgb, var(--color-bg) 50%, transparent) 25%, transparent 25%);
+    background-position:
+      -4px 0,
+      -4px 0;
+    background-size: 8px 8px;
+  }
+  .app-tex-outline {
+    border: 1px dashed var(--color-border-strong);
+  }
+}
+
+/*
+ * The streaming cursor of an assistant answer (features/ai): a blinking caret after the last block.
+ * Reduced motion keeps it as a static caret.
+ */
+@layer components {
+  .app-stream-cursor > div > :last-child::after {
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    margin-left: 2px;
+    vertical-align: -0.15em;
+    border-radius: 1px;
+    background: var(--color-accent);
+    animation: app-caret 1s steps(2, start) infinite;
+  }
+  @keyframes app-caret {
+    to {
+      visibility: hidden;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-stream-cursor > div > :last-child::after {
+      animation: none;
+    }
+  }
+}

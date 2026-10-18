@@ -1,0 +1,278 @@
+/*
+ * Dense "enterprise" patterns: tables and the
+ * compact and line tabs. Heights and paddings are density tokens (tokens.css).
+ */
+@layer components {
+  /* ─── Enterprise table ─── */
+  .table-enterprise {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .table-enterprise thead {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    background-color: var(--color-surface-raised);
+  }
+  .table-enterprise th {
+    position: relative;
+    height: var(--app-density-head-h);
+    padding: 0 var(--app-density-cell-px);
+    font-size: var(--text-compact-xs);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--color-fg-subtle);
+    border-bottom: 1px solid var(--color-border);
+  }
+  /* Short column dividers in the header. */
+  .table-enterprise th:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 30%;
+    bottom: 30%;
+    width: 1px;
+    background-color: var(--color-border);
+  }
+  .table-enterprise td {
+    height: var(--app-density-row-h);
+    padding: 0 var(--app-density-cell-px);
+    font-size: var(--text-compact-base);
+    vertical-align: middle;
+    color: var(--color-fg);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  }
+  .table-enterprise tbody tr {
+    transition: background-color 100ms var(--ease-standard);
+  }
+  .table-enterprise tbody tr:hover {
+    background-color: color-mix(in srgb, var(--color-muted) 45%, transparent);
+  }
+  .table-enterprise tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* ─── Compact (pill) tabs and segmented controls ─── */
+  .tabs-compact {
+    display: inline-flex;
+    gap: calc(var(--spacing) * 0.5);
+    padding: calc(var(--spacing) * 0.75);
+    width: fit-content;
+    border-radius: var(--radius-xs);
+    background-color: color-mix(in srgb, var(--color-muted) 70%, transparent);
+  }
+  .tab-compact {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--spacing) * 1);
+    height: var(--app-density-segment-h);
+    padding: 0 var(--app-density-control-px-sm);
+    border-radius: var(--radius-xs);
+    font-size: var(--text-compact-sm);
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--color-fg-muted);
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+  .tab-compact:hover {
+    color: var(--color-fg);
+    background-color: color-mix(in srgb, var(--color-surface-raised) 50%, transparent);
+  }
+  .tab-compact[aria-selected='true'],
+  .tab-compact[aria-checked='true'],
+  .tab-compact:has(> input:checked) {
+    background-color: var(--color-surface-raised);
+    color: var(--color-accent-text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ─── Line tabs ─── */
+  /*
+   * The tab row scrolls inside itself when it doesn't fit (narrow or zoomed-in windows);
+   * it never widens the page. The hairline is an inset shadow so the selected underline isn't
+   * clipped by the scroll box, and the edges fade while more tabs are hidden that way.
+   */
+  .tabs-line {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    box-shadow: inset 0 -1px 0 var(--color-border);
+  }
+  .tabs-line::-webkit-scrollbar {
+    display: none;
+  }
+  .tabs-line[data-overflow='end'] {
+    mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent);
+  }
+  .tabs-line[data-overflow='start'] {
+    mask-image: linear-gradient(to left, #000 calc(100% - 2rem), transparent);
+  }
+  .tabs-line[data-overflow='both'] {
+    mask-image: linear-gradient(to right, transparent, #000 2rem, #000 calc(100% - 2rem), transparent);
+  }
+  .tab-line {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: calc(var(--spacing) * 1.5);
+    min-height: var(--app-density-tab-h);
+    padding: 0 var(--app-density-tab-px);
+    font-size: var(--text-compact-base);
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--color-fg-muted);
+    border-bottom: 2px solid transparent;
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
+  }
+  .tab-line:hover {
+    color: var(--color-fg);
+    border-bottom-color: var(--color-border-hover);
+  }
+  .tab-line[aria-selected='true'] {
+    color: var(--color-accent-text);
+    border-bottom-color: var(--color-accent);
+  }
+}
+
+/*
+ * Analytical tables (docs/ai/DESIGN.md "Tables"): hairline rows without zebra, a sticky header and a sticky
+ * identity column, text left and numbers right in tabular figures, hover and selection that stay
+ * unambiguous. Used by components/ui/data-display/analytical-table.
+ */
+@layer components {
+  .table-analytical {
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    width: max-content;
+    min-width: 100%;
+    font-size: var(--text-compact-base);
+    font-variant-numeric: tabular-nums;
+  }
+  .table-analytical th {
+    position: sticky;
+    top: 0;
+    z-index: calc(var(--z-raised) + 1);
+    height: var(--app-density-grid-head-h);
+    padding: 0 calc(var(--spacing) * 2);
+    text-align: left;
+    font-size: var(--text-compact-sm);
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--color-fg-muted);
+    background-color: var(--color-surface-raised);
+    border-bottom: 1px solid var(--color-border);
+    user-select: none;
+  }
+  .table-analytical th[aria-sort] {
+    color: var(--color-fg);
+  }
+  .table-analytical td {
+    height: var(--app-density-grid-row-h);
+    padding: 0 calc(var(--spacing) * 2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .table-analytical th[data-align='right'],
+  .table-analytical td[data-align='right'] {
+    text-align: right;
+  }
+  .table-analytical th:first-child,
+  .table-analytical td:first-child {
+    padding-left: calc(var(--spacing) * 3);
+  }
+  .table-analytical [data-sticky] {
+    position: sticky;
+    left: 0;
+    z-index: var(--z-raised);
+    background-color: var(--color-surface-raised);
+  }
+  .table-analytical th[data-sticky] {
+    z-index: calc(var(--z-raised) + 2);
+  }
+  .table-analytical[data-scrolled] [data-sticky] {
+    box-shadow:
+      1px 0 0 var(--color-border),
+      6px 0 8px -6px color-mix(in srgb, var(--color-fg) 25%, transparent);
+  }
+  .table-analytical tr[data-row] {
+    cursor: pointer;
+    outline: none;
+  }
+  .table-analytical tr[data-row]:hover td {
+    background-color: var(--color-hover);
+  }
+  .table-analytical tr[data-row]:hover td[data-sticky] {
+    background: linear-gradient(var(--color-hover), var(--color-hover)), var(--color-surface-raised);
+  }
+  .table-analytical tr[data-row][aria-selected='true'] td {
+    background: linear-gradient(var(--color-accent-soft), var(--color-accent-soft)), var(--color-surface-raised);
+  }
+  .table-analytical tr[data-row][aria-selected='true'] td:first-child {
+    box-shadow: inset 2px 0 0 var(--color-accent);
+  }
+  .table-analytical tr[data-row]:focus-visible td {
+    box-shadow:
+      inset 0 2px 0 var(--color-ring),
+      inset 0 -2px 0 var(--color-ring);
+  }
+  .table-analytical tr[data-row]:focus-visible td:first-child {
+    box-shadow:
+      inset 2px 0 0 var(--color-ring),
+      inset 0 2px 0 var(--color-ring),
+      inset 0 -2px 0 var(--color-ring);
+  }
+  .table-analytical tr[data-expanded] td {
+    height: auto;
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3) calc(var(--spacing) * 2.5) calc(var(--spacing) * 10);
+    white-space: normal;
+    background-color: var(--color-surface-sunken);
+  }
+  .app-row-actions {
+    position: absolute;
+    top: 50%;
+    right: calc(var(--spacing) * 1);
+    display: flex;
+    gap: 2px;
+    padding: 1px;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface-overlay);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+  .table-analytical tr[data-row]:hover .app-row-actions,
+  .table-analytical tr[data-row]:focus .app-row-actions,
+  .table-analytical tr[data-row]:focus-within .app-row-actions {
+    opacity: 1;
+  }
+  .app-col-resize {
+    position: absolute;
+    top: 6px;
+    right: 0;
+    bottom: 6px;
+    width: 5px;
+    cursor: col-resize;
+    border-right: 1px solid var(--color-border-subtle);
+    touch-action: none;
+  }
+  .app-col-resize:hover,
+  .app-col-resize[data-resizing] {
+    border-right: 2px solid var(--color-accent);
+  }
+}

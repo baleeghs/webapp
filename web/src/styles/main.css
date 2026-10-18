@@ -1,0 +1,20 @@
+/*
+ * The single stylesheet entry, imported by main.tsx . The visual language follows
+ * docs/ai/FRONTEND.md "Styling"; colours come from our palettes (docs/ai/DESIGN.md).
+ * Order: Tailwind, fonts, tokens, themes, base, then component layers.
+ */
+@import 'tailwindcss';
+@import './fonts/fonts.css';
+@import './tokens/tokens.css';
+@import './themes/themes.css';
+@import './themes/palettes.gen.css';
+@import './base/base.css';
+@import './base/scrollbar.css';
+@import './components/components.css';
+@import './components/layout.css';
+@import './components/enterprise.css';
+@import './components/brand.css';
+@import './components/print.css';
+
+/* `dark:` follows the resolved theme on <html data-theme>, not the OS preference. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

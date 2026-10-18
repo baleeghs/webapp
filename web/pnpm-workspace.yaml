@@ -1,0 +1,17 @@
+# pnpm settings for web/. pnpm 12 reads them only here (not from package.json "pnpm" or .npmrc).
+
+# `pnpm add` records exact versions (no ^ or ~): every upgrade is a reviewed change.
+saveExact: true
+
+# Refuse to install on a Node version outside package.json "engines".
+engineStrict: true
+
+# No dependency may run install scripts (postinstall etc.): a supply-chain safeguard. Add a
+# package here only if it genuinely needs a build step, and say why.
+onlyBuiltDependencies: []
+
+peerDependencyRules:
+  allowedVersions:
+    # openapi-typescript declares typescript ^5 but works with 6. (TypeScript 7 drops the JS API
+    # it needs, so stay on 6 until openapi-typescript supports 7.)
+    openapi-typescript>typescript: '6'

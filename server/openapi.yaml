@@ -1,0 +1,316 @@
+openapi: 3.1.0
+info:
+  title: App API
+  description: HTTP API of the app. Errors use the `ErrorBody` envelope.
+  version: 0.1.0
+paths:
+  /api/v1/notes:
+    get:
+      tags:
+      - notes
+      operationId: list_notes
+      parameters:
+      - name: limit
+        in: query
+        description: Page size, 1..=100 (default 20).
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+      - name: offset
+        in: query
+        description: Number of notes to skip.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotePage'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+    post:
+      tags:
+      - notes
+      operationId: create_note
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNoteRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteDto'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+  /api/v1/notes/{id}:
+    get:
+      tags:
+      - notes
+      operationId: get_note
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+    delete:
+      tags:
+      - notes
+      operationId: delete_note
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+    patch:
+      tags:
+      - notes
+      operationId: update_note
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNoteRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteDto'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+  /healthz:
+    get:
+      tags:
+      - system
+      summary: 'Liveness: always 200 while the process can serve requests.'
+      operationId: liveness
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /readyz:
+    get:
+      tags:
+      - system
+      summary: 'Readiness: 200 when every dependency answers, 503 otherwise (with the failing components).'
+      operationId: readiness
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: A dependency is unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+components:
+  schemas:
+    ComponentDto:
+      type: object
+      required:
+      - name
+      - healthy
+      properties:
+        error:
+          type:
+          - string
+          - 'null'
+        healthy:
+          type: boolean
+        name:
+          type: string
+    CreateNoteRequest:
+      type: object
+      required:
+      - title
+      properties:
+        body:
+          type: string
+        title:
+          type: string
+          description: 1..=200 characters after trimming.
+      additionalProperties: false
+    ErrorBody:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          description: Stable machine-readable code, e.g. `not_found`, `validation_failed`.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldErrorDto'
+        message:
+          type: string
+          description: Human-readable description; may change between releases.
+    FieldErrorDto:
+      type: object
+      required:
+      - field
+      - message
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+    HealthResponse:
+      type: object
+      required:
+      - status
+      - version
+      properties:
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentDto'
+        status:
+          type: string
+          description: '`ok` or `unavailable`.'
+        version:
+          type: string
+    NoteDto:
+      type: object
+      required:
+      - id
+      - title
+      - body
+      - createdAt
+      - updatedAt
+      properties:
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+    NotePage:
+      type: object
+      required:
+      - items
+      - total
+      - limit
+      - offset
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteDto'
+        limit:
+          type: integer
+          format: int32
+          minimum: 0
+        offset:
+          type: integer
+          format: int64
+          minimum: 0
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    UpdateNoteRequest:
+      type: object
+      description: Omitted fields are left unchanged.
+      properties:
+        body:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+tags:
+- name: system
+  description: Health and readiness probes
+- name: notes
+  description: Example CRUD resource

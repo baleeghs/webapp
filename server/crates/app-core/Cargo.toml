@@ -1,0 +1,24 @@
+[package]
+name = "app-core"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+async-trait = "0.1.92"
+chrono = { version = "0.4.45", features = ["serde"] }
+serde = { version = "1.0.229", features = ["derive"] }
+thiserror = "2.0.21"
+tracing = "0.1.44"
+uuid = { version = "1.28.0", features = ["v7", "serde"] }
+
+[features]
+# In-memory adapters (e.g. `notes::InMemoryNoteRepository`): used by tests in other crates and by
+# the server when no database is configured.
+memory = []
+
+[dev-dependencies]
+tokio = { version = "1.53.3", features = ["macros", "rt-multi-thread"] }

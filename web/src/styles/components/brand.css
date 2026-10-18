@@ -1,0 +1,71 @@
+/*
+ * The logo (components/brand/logo.tsx, docs/ai/DESIGN.md "Logo"): token fills and the three animations. Bars
+ * scale from their own base (transform-box: fill-box). prefers-reduced-motion renders it static
+ * (the component also drops the animation class).
+ */
+@layer components {
+  .app-logo-bar {
+    fill: var(--app-logo-mark);
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+  .app-logo-bar-alert {
+    fill: var(--app-logo-alert);
+  }
+  .app-logo-text {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--app-logo-text);
+  }
+
+  /* intro: a one-time staggered rise, ~600 ms in total. */
+  .app-logo-intro .app-logo-bar {
+    animation: app-logo-rise 360ms var(--ease-standard) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+  /* loading: a gentle wave across the bars. */
+  .app-logo-loading .app-logo-bar {
+    animation: app-logo-wave 1.2s var(--ease-in-out) infinite;
+    animation-delay: calc(var(--i, 0) * 120ms);
+  }
+  /* alert: a subtle pulse of the red bar only. */
+  .app-logo-alert .app-logo-bar-alert {
+    animation: app-logo-pulse 1.6s var(--ease-in-out) infinite;
+  }
+
+  @keyframes app-logo-rise {
+    from {
+      transform: scaleY(0.2);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @keyframes app-logo-wave {
+    0%,
+    100% {
+      transform: none;
+    }
+    50% {
+      transform: scaleY(0.55);
+    }
+  }
+  @keyframes app-logo-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.45;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-logo .app-logo-bar {
+      animation: none !important;
+    }
+  }
+}

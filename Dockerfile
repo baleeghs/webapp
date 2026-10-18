@@ -2,7 +2,7 @@
 # Production image: one static-ish binary serving the API (HTTP + gRPC) and the built web app.
 
 # ── Web app ──────────────────────────────────────────────────────────────────
-FROM node:24-alpine AS web
+FROM node:26-alpine AS web
 RUN corepack enable
 WORKDIR /src/web
 COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml ./

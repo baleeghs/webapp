@@ -239,13 +239,16 @@ impl CacheConfig {
 #[cfg(test)]
 #[allow(clippy::result_large_err)] // figment::Jail closures return figment::Error.
 mod tests {
+    // Every test runs in a `Jail` that starts with an empty environment (`clear_env`), so variables
+    // from the shell or CI (CI sets DATABASE_URL for the Postgres tests) cannot change the result.
     use figment::Jail;
 
     use super::*;
 
     #[test]
     fn defaults_are_valid() {
-        Jail::expect_with(|_| {
+        Jail::expect_with(|jail| {
+            jail.clear_env();
             let config = AppConfig::load().expect("defaults load");
             assert_eq!(config.http.port, 8080);
             assert_eq!(config.env, Environment::Development);
@@ -256,6 +259,7 @@ mod tests {
     #[test]
     fn env_overrides_nested_fields() {
         Jail::expect_with(|jail| {
+            jail.clear_env();
             jail.set_env("APP_HTTP__PORT", "9000");
             jail.set_env("APP_LOG__FORMAT", "json");
             jail.set_env("DATABASE_URL", "postgres://u:p@db/x");
@@ -276,6 +280,7 @@ mod tests {
     #[test]
     fn database_is_optional_except_in_production() {
         Jail::expect_with(|jail| {
+            jail.clear_env();
             assert!(!AppConfig::load().expect("loads without a database").database.is_configured());
             jail.set_env("APP_ENV", "production");
             assert!(matches!(AppConfig::load(), Err(ConfigError::Invalid(_))));
@@ -288,6 +293,7 @@ mod tests {
     #[test]
     fn production_rejects_wildcard_cors() {
         Jail::expect_with(|jail| {
+            jail.clear_env();
             jail.set_env("APP_ENV", "production");
             jail.set_env("DATABASE_URL", "postgres://u:p@db/x");
             jail.set_env("APP_HTTP__CORS_ORIGINS", "[\"*\"]");
